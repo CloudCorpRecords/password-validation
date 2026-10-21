@@ -70,6 +70,7 @@ jobs:
             echo 'Sleep 500ms'
             echo 'Show'
           } > /tmp/env.tape
+          mkdir -p proof/screenshots
           for t in proof/demo.tape proof/screens.tape; do
             sed -i '/^# --- recording starts ---$/r /tmp/env.tape' "$t"
           done
