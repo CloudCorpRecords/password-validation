@@ -23,5 +23,5 @@ Enter
 Sleep 2s
 Type "scripts/verify.sh"
 Enter
-Wait+Screen@180s /agree on all|Some checks failed/
+Wait@180s
 Sleep 5s

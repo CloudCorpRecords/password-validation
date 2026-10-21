@@ -73,6 +73,9 @@ jobs:
           cat docs/demo.tape
       - uses: charmbracelet/vhs-action@v2
         with: { path: docs/demo.tape }
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: recording, path: docs/verify-demo.*, if-no-files-found: ignore }
       - run: git checkout docs/demo.tape
       - name: Commit recording
         run: |
