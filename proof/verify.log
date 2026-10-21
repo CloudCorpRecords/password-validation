@@ -1,6 +1,6 @@
-commit:    b11740ec3c991675046216dadf936b04e998be89
-date:      2026-10-21T18:43:15Z
-ci run:    https://github.com/CloudCorpRecords/password-validation/actions/runs/39655146878
+commit:    892d297c27c8a02900ed3c3fd7bc46331d4791fd
+date:      2026-10-21T18:48:12Z
+ci run:    https://github.com/CloudCorpRecords/password-validation/actions/runs/39655860851
 
 toolchains:
   node    v22.23.3
@@ -8,7 +8,7 @@ toolchains:
   c++     c++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0
   go      go version go1.22.12 linux/amd64
   java    openjdk version "21.0.12.1" 2026-08-18 LTS
-  rust    rustc 1.99.1 (58cf8f9c3 2026-10-13)
+  rust    rustc 1.99.0 (b940084d7 2026-09-28)
   ruby    ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]
 
 == typescript ==
