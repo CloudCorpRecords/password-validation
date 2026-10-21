@@ -1,0 +1,10 @@
+{
+  "name": "password-validation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --no-warnings --experimental-strip-types --test solution.test.ts",
+    "start": "node --no-warnings --experimental-strip-types main.ts"
+  }
+}
