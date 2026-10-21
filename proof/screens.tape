@@ -49,4 +49,5 @@ Sleep 500ms
 Type "FORCE_COLOR=1 scripts/verify.sh python 2>&1 | grep -E '== |unit tests|case|Summary|unit |checks failed|agree'; git checkout -- python/solution.py"
 Enter
 Wait@120s
+Sleep 6s
 Screenshot proof/screenshots/bug-caught.png
