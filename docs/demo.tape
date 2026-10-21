@@ -10,6 +10,8 @@ Set Padding 20
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 40ms
 
+# --- recording starts ---
+
 Type "# Same Password Validation solution in 7 languages, one shared test suite"
 Enter
 Sleep 1s
