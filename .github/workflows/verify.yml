@@ -3,7 +3,7 @@ name: verify
 on:
   push:
     branches: [main]
-    paths-ignore: ["docs/**", "**.md"]
+    paths-ignore: ["proof/**", "**.md"]
   pull_request:
   workflow_dispatch:
 
@@ -35,8 +35,8 @@ jobs:
       - run: scripts/verify.sh ${{ matrix.lang }}
         env: { FORCE_COLOR: "1" }
 
-  demo-video:
-    name: record demo video
+  proof:
+    name: record proof (video, screenshots, log)
     needs: verify
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -54,11 +54,12 @@ jobs:
         with: { distribution: temurin, java-version: "21" }
       - uses: ruby/setup-ruby@v1
         with: { ruby-version: "3.3" }
-      # Warm the build caches so the recording shows tests, not compile time.
-      - run: scripts/verify.sh >/dev/null
-      # The recorder's shell doesn't inherit the toolchain PATH from the setup-* steps,
-      # so pass it in explicitly and stop Go from trying to download a toolchain.
-      - name: Pin toolchain environment for the recording
+      # Also warms the build caches so the recordings show tests, not compile time.
+      - name: Full run log
+        run: scripts/proof-log.sh
+      # The recorder's shell doesn't inherit PATH from the setup-* steps, so export it
+      # in a hidden step at the top of each tape.
+      - name: Pin toolchain environment for the recordings
         run: |
           {
             echo 'Hide'
@@ -69,19 +70,26 @@ jobs:
             echo 'Sleep 500ms'
             echo 'Show'
           } > /tmp/env.tape
-          sed -i '/^# --- recording starts ---$/r /tmp/env.tape' docs/demo.tape
-          cat docs/demo.tape
-      - uses: charmbracelet/vhs-action@v2
-        with: { path: docs/demo.tape }
+          for t in proof/demo.tape proof/screens.tape; do
+            sed -i '/^# --- recording starts ---$/r /tmp/env.tape' "$t"
+          done
+      - name: Record video
+        uses: charmbracelet/vhs-action@v2
+        with: { path: proof/demo.tape }
+      - name: Record screenshots
+        uses: charmbracelet/vhs-action@v2
+        with: { path: proof/screens.tape, install-fonts: false }
+      - run: git checkout -- proof/demo.tape proof/screens.tape && rm -f proof/screens.gif
+      - name: Build proof index
+        run: scripts/proof-index.sh
       - if: always()
         uses: actions/upload-artifact@v4
-        with: { name: recording, path: docs/verify-demo.*, if-no-files-found: ignore }
-      - run: git checkout docs/demo.tape
-      - name: Commit recording
+        with: { name: proof, path: proof/, if-no-files-found: ignore }
+      - name: Commit proof
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git add docs/verify-demo.gif docs/verify-demo.mp4
+          git add proof/
           git diff --cached --quiet && exit 0
-          git commit -m "Update verification demo recording [skip ci]"
+          git commit -m "Update proof: video, screenshots, log [skip ci]"
           git push

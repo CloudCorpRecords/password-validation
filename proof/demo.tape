@@ -1,6 +1,6 @@
 # Recorded by .github/workflows/verify.yml with https://github.com/charmbracelet/vhs
-Output docs/verify-demo.gif
-Output docs/verify-demo.mp4
+Output proof/verify-demo.gif
+Output proof/verify-demo.mp4
 
 Set Shell bash
 Set FontSize 15
