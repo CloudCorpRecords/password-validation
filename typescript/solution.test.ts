@@ -18,3 +18,8 @@ test('edge cases', () => {
         ['weak', 'strong', 'strong', 'strong', 'weak'],
     );
 });
+
+test('common words are case-sensitive and empty words are ignored', () => {
+    assert.deepEqual(getPasswordStrength(['mycoffeecup1', 'myCoffeeCup'], ['coffee']), ['weak', 'strong']);
+    assert.deepEqual(getPasswordStrength(['Abc123'], ['']), ['strong']);
+});

@@ -1,0 +1,68 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["docs/**", "**.md"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: ${{ matrix.lang }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lang: [typescript, python, cpp, go, java, rust, ruby]
+    steps:
+      - uses: actions/checkout@v4
+      - if: matrix.lang == 'typescript'
+        uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - if: matrix.lang == 'python'
+        uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - if: matrix.lang == 'go'
+        uses: actions/setup-go@v5
+        with: { go-version: "1.22" }
+      - if: matrix.lang == 'java'
+        uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "21" }
+      - if: matrix.lang == 'ruby'
+        uses: ruby/setup-ruby@v1
+        with: { ruby-version: "3.3" }
+      - run: scripts/verify.sh ${{ matrix.lang }}
+        env: { FORCE_COLOR: "1" }
+
+  demo-video:
+    name: record demo video
+    needs: verify
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.22" }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "21" }
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: "3.3" }
+      # Warm the build caches so the recording shows tests, not compile time.
+      - run: scripts/verify.sh >/dev/null
+      - uses: charmbracelet/vhs-action@v2
+        with: { path: docs/demo.tape }
+      - name: Commit recording
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add docs/verify-demo.gif docs/verify-demo.mp4
+          git diff --cached --quiet && exit 0
+          git commit -m "Update verification demo recording [skip ci]"
+          git push
