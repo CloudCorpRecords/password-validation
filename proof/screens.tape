@@ -51,3 +51,4 @@ Enter
 Wait@120s
 Sleep 6s
 Screenshot proof/screenshots/bug-caught.png
+Sleep 1s
