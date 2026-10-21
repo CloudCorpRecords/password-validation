@@ -15,7 +15,7 @@ langs=(typescript python cpp go java rust ruby)
   echo
   echo "| | |"
   echo "|---|---|"
-  echo "| Commit | [\`${sha:0:7}\`](../../../commit/$sha) |"
+  echo "| Commit | [\`${sha:0:7}\`](${GITHUB_SERVER_URL:-https://github.com}/${GITHUB_REPOSITORY:-CloudCorpRecords/password-validation}/commit/$sha) |"
   echo "| CI run | [$run_url]($run_url) |"
   echo "| Generated | $(date -u +'%Y-%m-%d %H:%M UTC') |"
   echo "| Result | $(tail -2 proof/verify.log | head -1) |"
