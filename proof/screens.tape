@@ -41,7 +41,12 @@ Wait@120s
 Screenshot proof/screenshots/ruby.png
 
 # Plant a bug (length check < 6 becomes < 5) and show the suite catching it.
-Type "clear && sed -i 's/len(pwd) < 6/len(pwd) < 5/' python/solution.py && git diff --stat && scripts/verify.sh python 2>&1 | tail -18; git checkout -- python/solution.py"
+Type "clear && sed -i 's/len(pwd) < 6/len(pwd) < 5/' python/solution.py"
+Enter
+Type "git --no-pager diff --color -U0 python/solution.py | tail -2"
+Enter
+Sleep 500ms
+Type "FORCE_COLOR=1 scripts/verify.sh python 2>&1 | grep -E '== |unit tests|case|Summary|unit |checks failed|agree'; git checkout -- python/solution.py"
 Enter
 Wait@120s
 Screenshot proof/screenshots/bug-caught.png
